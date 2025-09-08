@@ -48,6 +48,14 @@ if not df.empty:
     df["Dato"] = pd.to_datetime(df["Dato"])
     st.dataframe(df)
 
+# 🗑️ Slett alle data
+if st.button("🗑️ Slett alle data"):
+    st.session_state["transaksjoner"] = []
+    if os.path.exists(DATAFIL):
+        os.remove(DATAFIL)
+    st.success("Alle transaksjoner er slettet.")
+
+    
     # 💾 Last ned transaksjoner som CSV
     csv_trans = df.to_csv(index=False).encode("utf-8")
     st.download_button("📥 Last ned transaksjoner (CSV)", csv_trans, "studentbudsjett_transaksjoner.csv", "text/csv", key="csv_trans")
