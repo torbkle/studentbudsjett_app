@@ -1,3 +1,10 @@
+# Logo
+
+![StudentBudsjett Logo](studentbudsjett_logo.png)
+
+---
+# Banner
+
 [![StudentBudsjett Banner](banner.png)](https://torbkle-streamlit-app.streamlit.app)
 
 ---
