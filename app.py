@@ -138,4 +138,6 @@ if not df.empty:
     pdf.cell(200, 10, txt="Utgifter per kategori:", ln=True)
     for uke in ukekategorier.index:
         pdf.cell(200, 8, txt=f"Uke {uke}:", ln=True)
-        for
+        for kategori, beløp in ukekategorier.loc[uke].items():
+            pdf.cell(200, 8, txt=f"  {kategori}: {beløp:.2f} kr", ln=True)
+
