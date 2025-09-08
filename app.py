@@ -1,17 +1,16 @@
-# app.py
 import streamlit as st
 import pandas as pd
 import datetime
 from sklearn.linear_model import LinearRegression
-import numpy as np
 import matplotlib.pyplot as plt
 from fpdf import FPDF
 
 # 📌 Logo og introduksjon
 st.image("studentbudsjett_logo.png", width=200)
-st.write("Hold oversikt over inntekter og utgifter – og få prediksjon på når du går tom for penger.")
+st.title("StudentBudsjett 2.0")
+st.write("Få oversikt over økonomien din – uke for uke.")
 
-# 📋 Sidepanel for transaksjoner
+# 📋 Registrering
 st.sidebar.header("Legg til transaksjon")
 trans_type = st.sidebar.selectbox("Type", ["Inntekt", "Utgift"])
 amount = st.sidebar.number_input("Beløp (kr)", min_value=0.0, step=10.0)
@@ -23,95 +22,46 @@ if st.sidebar.button("Legg til"):
     st.session_state.setdefault("transaksjoner", []).append(new_data)
     st.success("Transaksjon lagt til!")
 
-# 📊 Vis transaksjoner og analyser
-st.subheader("📋 Dine transaksjoner")
+# 📊 Analyse
 df = pd.DataFrame(st.session_state.get("transaksjoner", []))
-
 if not df.empty:
     df["Dato"] = pd.to_datetime(df["Dato"])
-    st.dataframe(df)
-
-    # 💾 Last ned transaksjoner som CSV
-    csv_trans = df.to_csv(index=False).encode("utf-8")
-    st.download_button(
-        label="📥 Last ned transaksjoner (CSV)",
-        data=csv_trans,
-        file_name="studentbudsjett_transaksjoner.csv",
-        mime="text/csv",
-        key="csv_trans"
-    )
-
-    # 💰 Beregn saldo og prediksjon
-    df["Beløp_signed"] = df.apply(lambda row: row["Beløp"] if row["Type"] == "Inntekt" else -row["Beløp"], axis=1)
+    df["Uke"] = df["Dato"].dt.isocalendar().week
+    df["Beløp_signed"] = df.apply(lambda r: r["Beløp"] if r["Type"] == "Inntekt" else -r["Beløp"], axis=1)
     df_sorted = df.sort_values("Dato")
     df_sorted["Saldo"] = df_sorted["Beløp_signed"].cumsum()
     df_sorted["Dag"] = (df_sorted["Dato"] - df_sorted["Dato"].min()).dt.days
 
+    st.subheader("📋 Transaksjoner")
+    st.dataframe(df)
+
+    # 📈 Saldoanalyse
     saldo = df_sorted["Saldo"].iloc[-1]
     st.metric("💰 Nåværende saldo", f"{saldo:.2f} kr")
 
-    X = df_sorted[["Dag"]]
-    y = df_sorted["Saldo"]
     model = LinearRegression()
-    model.fit(X, y)
-
+    model.fit(df_sorted[["Dag"]], df_sorted["Saldo"])
     if model.coef_[0] < 0:
         dag_null = -model.intercept_ / model.coef_[0]
         dato_null = df_sorted["Dato"].min() + pd.Timedelta(days=dag_null)
-        st.warning(f"🔮 Prediksjon: Du går tom for penger rundt {dato_null.date()}")
+        st.warning(f"🔮 Du går tom for penger rundt {dato_null.date()}")
     else:
-        st.success("🔮 Prediksjon: Saldoen din vokser – ingen fare for tom konto!")
+        st.success("🔮 Saldoen vokser – ingen fare for tom konto!")
 
-    # 💾 Last ned saldohistorikk som CSV
-    csv_saldo = df_sorted[["Dato", "Saldo"]].to_csv(index=False).encode("utf-8")
-    st.download_button(
-        label="📥 Last ned saldohistorikk (CSV)",
-        data=csv_saldo,
-        file_name="studentbudsjett_saldo.csv",
-        mime="text/csv",
-        key="csv_saldo"
-    )
+    # 📊 Ukentlig oppsummering
+    st.subheader("📅 Ukentlig saldoendring")
+    ukesaldo = df.groupby("Uke")["Beløp_signed"].sum().cumsum()
+    st.line_chart(ukesaldo)
 
-    # 📈 Visualiser saldoen over tid
-    fig1, ax1 = plt.subplots()
-    ax1.plot(df_sorted["Dato"], df_sorted["Saldo"], marker="o", linestyle="-", color="teal")
-    ax1.set_title("Saldo over tid")
-    ax1.set_xlabel("Dato")
-    ax1.set_ylabel("Saldo (kr)")
-    ax1.grid(True)
-    st.pyplot(fig1)
+    st.subheader("📊 Utgifter per kategori per uke")
+    ukekategorier = df[df["Type"] == "Utgift"].groupby(["Uke", "Kategori"])["Beløp"].sum().unstack(fill_value=0)
+    st.bar_chart(ukekategorier)
 
-    # 🥧 Kakediagram over utgifter per kategori
-    utgifter = df[df["Type"] == "Utgift"]
-    if not utgifter.empty:
-        kategori_sum = utgifter.groupby("Kategori")["Beløp"].sum()
-        fig2, ax2 = plt.subplots()
-        ax2.pie(kategori_sum, labels=kategori_sum.index, autopct="%1.1f%%", startangle=90)
-        ax2.set_title("Fordeling av utgifter")
-        st.subheader("📊 Fordeling av utgifter")
-        st.pyplot(fig2)
+    # 💡 Tips
+    if "Mat" in df["Kategori"].values and df[df["Kategori"] == "Mat"]["Beløp"].sum() > 1000:
+        st.info("💡 Tips: Vurder å lage mat hjemme oftere for å redusere matutgifter.")
 
-        # 💾 Last ned utgiftsfordeling som CSV
-        csv_kategorier = kategori_sum.reset_index().to_csv(index=False).encode("utf-8")
-        st.download_button(
-            label="📥 Last ned utgiftsfordeling (CSV)",
-            data=csv_kategorier,
-            file_name="studentbudsjett_utgifter.csv",
-            mime="text/csv",
-            key="csv_kategorier"
-        )
-
-        # ⚠️ Advarsel hvis én kategori dominerer
-        total_utgift = kategori_sum.sum()
-        største_kategori = kategori_sum.idxmax()
-        andel = kategori_sum.max() / total_utgift
-
-        if andel > 0.5:
-            st.error(f"⚠️ Advarsel: Kategori '{største_kategori}' utgjør {andel:.1%} av dine utgifter!")
-        elif andel > 0.3:
-            st.warning(f"🔎 Merk: Kategori '{største_kategori}' utgjør {andel:.1%} av dine utgifter.")
-
-    # 📄 PDF-rapport med Unicode-støtte
+    # 📄 PDF-rapport
     pdf = FPDF()
     pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
     pdf.set_font("DejaVu", size=12)
@@ -125,19 +75,18 @@ if not df.empty:
     else:
         pdf.cell(200, 10, txt="Prediksjon: Saldoen vokser – ingen fare for tom konto!", ln=True)
     pdf.ln(10)
-    pdf.cell(200, 10, txt="Transaksjoner:", ln=True)
-    for index, row in df.iterrows():
-        linje = f"{row['Dato'].date()} | {row['Type']} | {row['Beløp']} kr | {row['Kategori']}"
-        pdf.cell(200, 8, txt=linje, ln=True)
+    pdf.cell(200, 10, txt="Ukentlig saldo:", ln=True)
+    for uke, s in ukesaldo.items():
+        pdf.cell(200, 8, txt=f"Uke {uke}: {s:.2f} kr", ln=True)
+    pdf.ln(10)
+    pdf.cell(200, 10, txt="Utgifter per kategori:", ln=True)
+    for uke in ukekategorier.index:
+        pdf.cell(200, 8, txt=f"Uke {uke}:", ln=True)
+        for kategori, beløp in ukekategorier.loc[uke].items():
+            pdf.cell(200, 8, txt=f"  {kategori}: {beløp:.2f} kr", ln=True)
 
     pdf_bytes = pdf.output(dest='S').encode('utf-8')
-    st.download_button(
-        label="📄 Last ned budsjett som PDF",
-        data=pdf_bytes,
-        file_name="studentbudsjett_rapport.pdf",
-        mime="application/pdf",
-        key="pdf_download"
-    )
+    st.download_button("📄 Last ned PDF-rapport", pdf_bytes, "studentbudsjett_rapport.pdf", "application/pdf", key="pdf_download")
 
 else:
     st.info("Ingen transaksjoner registrert ennå.")
