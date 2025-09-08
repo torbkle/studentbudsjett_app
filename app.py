@@ -28,12 +28,12 @@ df = pd.DataFrame(st.session_state.get("transaksjoner", []))
 
 if not df.empty:
     # 📈 Visualiser saldoen over tid
-fig, ax = plt.subplots()
-ax.plot(df_sorted["Dato"], df_sorted["Saldo"], marker="o", linestyle="-", color="teal")
-ax.set_title("Saldo over tid")
-ax.set_xlabel("Dato")
-ax.set_ylabel("Saldo (kr)")
-ax.grid(True)
+    fig, ax = plt.subplots()
+    ax.plot(df_sorted["Dato"], df_sorted["Saldo"], marker="o", linestyle="-", color="teal")
+    ax.set_title("Saldo over tid")
+    ax.set_xlabel("Dato")
+    ax.set_ylabel("Saldo (kr)")
+    ax.grid(True)
 
 st.pyplot(fig)
     st.dataframe(df)
