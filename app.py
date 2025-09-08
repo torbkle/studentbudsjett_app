@@ -67,7 +67,8 @@ if not df.empty:
     # 📄 Generer PDF-rapport
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
+    pdf.set_font("DejaVu", size=12)
 
     # Tittel og dato
     pdf.cell(200, 10, txt="StudentBudsjett Rapport", ln=True, align="C")
