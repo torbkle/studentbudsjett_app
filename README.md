@@ -1,6 +1,6 @@
 # Favicon
 
-![App-ikon](studentbudsjett_icon.png)
+![App-ikon](favicon.png)
 
 ---
 
