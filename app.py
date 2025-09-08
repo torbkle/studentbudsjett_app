@@ -48,12 +48,7 @@ if not df.empty:
     df["Dato"] = pd.to_datetime(df["Dato"])
     st.dataframe(df)
 
-# 🗑️ Slett alle data
-if st.button("🗑️ Slett alle data"):
-    st.session_state["transaksjoner"] = []
-    if os.path.exists(DATAFIL):
-        os.remove(DATAFIL)
-    st.success("Alle transaksjoner er slettet.")
+
 
     
     # 💾 Last ned transaksjoner som CSV
