@@ -100,7 +100,7 @@ if not df.empty:
 
     st.download_button(
         label="📄 Last ned budsjett som PDF",
-        data=buffer.getvalue(),
+        data=pdf_bytes,
         file_name="studentbudsjett_rapport.pdf",
         mime="application/pdf"
     )
