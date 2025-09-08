@@ -6,11 +6,11 @@ from sklearn.linear_model import LinearRegression
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Vis logo og introduksjon
+# 📌 Logo og introduksjon
 st.image("studentbudsjett_logo.png", width=200)
 st.write("Hold oversikt over inntekter og utgifter – og få prediksjon på når du går tom for penger.")
 
-# Sidepanel for transaksjoner
+# 📋 Sidepanel for transaksjoner
 st.sidebar.header("Legg til transaksjon")
 trans_type = st.sidebar.selectbox("Type", ["Inntekt", "Utgift"])
 amount = st.sidebar.number_input("Beløp (kr)", min_value=0.0, step=10.0)
@@ -22,23 +22,14 @@ if st.sidebar.button("Legg til"):
     st.session_state.setdefault("transaksjoner", []).append(new_data)
     st.success("Transaksjon lagt til!")
 
-# Vis transaksjoner og saldo
+# 📊 Vis transaksjoner og analyser
 st.subheader("📋 Dine transaksjoner")
 df = pd.DataFrame(st.session_state.get("transaksjoner", []))
 
 if not df.empty:
-    # 📈 Visualiser saldoen over tid
-    fig, ax = plt.subplots()
-    ax.plot(df_sorted["Dato"], df_sorted["Saldo"], marker="o", linestyle="-", color="teal")
-    ax.set_title("Saldo over tid")
-    ax.set_xlabel("Dato")
-    ax.set_ylabel("Saldo (kr)")
-    ax.grid(True)
-
-st.pyplot(fig)
     st.dataframe(df)
 
-    # Beregn saldo
+    # 💰 Beregn saldo
     saldo = df.apply(lambda row: row["Beløp"] if row["Type"] == "Inntekt" else -row["Beløp"], axis=1).sum()
     st.metric("💰 Nåværende saldo", f"{saldo:.2f} kr")
 
@@ -59,6 +50,15 @@ st.pyplot(fig)
         st.warning(f"🔮 Prediksjon: Du går tom for penger rundt {dato_null.date()}")
     else:
         st.success("🔮 Prediksjon: Saldoen din vokser – ingen fare for tom konto!")
+
+    # 📈 Visualiser saldoen over tid
+    fig, ax = plt.subplots()
+    ax.plot(df_sorted["Dato"], df_sorted["Saldo"], marker="o", linestyle="-", color="teal")
+    ax.set_title("Saldo over tid")
+    ax.set_xlabel("Dato")
+    ax.set_ylabel("Saldo (kr)")
+    ax.grid(True)
+    st.pyplot(fig)
 
 else:
     st.info("Ingen transaksjoner registrert ennå.")
