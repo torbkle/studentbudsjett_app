@@ -111,10 +111,11 @@ if not df.empty:
         elif andel > 0.3:
             st.warning(f"🔎 Merk: Kategori '{største_kategori}' utgjør {andel:.1%} av dine utgifter.")
 
-    # 📄 PDF-rapport
+    # 📄 PDF-rapport med Unicode-støtte
     pdf = FPDF()
+    pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
+    pdf.set_font("DejaVu", size=12)
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
     pdf.cell(200, 10, txt="StudentBudsjett Rapport", ln=True, align="C")
     pdf.cell(200, 10, txt=f"Dato: {datetime.date.today()}", ln=True, align="C")
     pdf.ln(10)
@@ -129,7 +130,7 @@ if not df.empty:
         linje = f"{row['Dato'].date()} | {row['Type']} | {row['Beløp']} kr | {row['Kategori']}"
         pdf.cell(200, 8, txt=linje, ln=True)
 
-    pdf_bytes = pdf.output(dest='S').encode('latin1')
+    pdf_bytes = pdf.output(dest='S').encode('utf-8')
     st.download_button(
         label="📄 Last ned budsjett som PDF",
         data=pdf_bytes,
