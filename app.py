@@ -8,7 +8,7 @@ from fpdf import FPDF
 
 # 📌 Logo og introduksjon
 st.image("studentbudsjett_logo.png", width=200)
-st.write("Hold oversikt over inntekter og utgifter – og få prediksjon på når du går tom for penger.")
+st.write("Hold oversikt over inntekter og utgifter – og få prediksjon(beregning) på når du går tom for penger.")
 
 # 📋 Sidepanel for transaksjoner
 st.sidebar.header("Legg til transaksjon")
