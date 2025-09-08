@@ -4,6 +4,7 @@ import pandas as pd
 import datetime
 from sklearn.linear_model import LinearRegression
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Vis logo og introduksjon
 st.image("studentbudsjett_logo.png", width=200)
@@ -26,6 +27,15 @@ st.subheader("📋 Dine transaksjoner")
 df = pd.DataFrame(st.session_state.get("transaksjoner", []))
 
 if not df.empty:
+    # 📈 Visualiser saldoen over tid
+fig, ax = plt.subplots()
+ax.plot(df_sorted["Dato"], df_sorted["Saldo"], marker="o", linestyle="-", color="teal")
+ax.set_title("Saldo over tid")
+ax.set_xlabel("Dato")
+ax.set_ylabel("Saldo (kr)")
+ax.grid(True)
+
+st.pyplot(fig)
     st.dataframe(df)
 
     # Beregn saldo
