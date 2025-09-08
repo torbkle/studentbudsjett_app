@@ -14,7 +14,7 @@ st.write("Hold oversikt over inntekter og utgifter – og få prediksjon(beregni
 st.sidebar.header("Legg til transaksjon")
 trans_type = st.sidebar.selectbox("Type", ["Inntekt", "Utgift"])
 amount = st.sidebar.number_input("Beløp (kr)", min_value=0.0, step=10.0)
-category = st.sidebar.selectbox("Kategori", ["Mat", "Bolig", "Transport", "Fritid", "Trening", "Regning", "Annet"])
+category = st.sidebar.selectbox("Kategori", ["Mat", "Bolig", "Transport", "Fritid", "Trening", "Regning", "Lønn", "Studielån", "Annet"])
 date = st.sidebar.date_input("Dato", value=datetime.date.today())
 
 if st.sidebar.button("Legg til"):
