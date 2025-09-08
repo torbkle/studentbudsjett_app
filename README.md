@@ -14,9 +14,10 @@ En enkel og interaktiv Streamlit-app som hjelper studenter med å holde oversikt
 
 ---
 
-## 🖼️ Skjermbilder
+## 🖼️ Skjermbilde
 
-> *(Legg til skjermbilder her når appen er publisert – f.eks. saldooversikt, inputpanel, prediksjon)*
+![StudentBudsjett App](screenshot.png)
+
 
 ---
 
