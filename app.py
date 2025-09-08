@@ -50,6 +50,13 @@ if not df.empty:
         st.warning(f"🔮 Prediksjon: Du går tom for penger rundt {dato_null.date()}")
     else:
         st.success("🔮 Prediksjon: Saldoen din vokser – ingen fare for tom konto!")
+    # 🥧 Kakediagram over utgifter per kategori 
+    utgifter = df[df["Type"] == "Utgift"]
+    if not utgifter.empty:
+        kategori_sum = utgifter.groupby("Kategori")["Beløp"].sum()
+        st.subheader("📊 Fordeling av utgifter")
+        st.write("Her ser du hvor pengene dine går:")
+        st.pyplot(kategori_sum.plot.pie(autopct="%1.1f%%", figsize=(5, 5), ylabel=""))
 
     # 📈 Visualiser saldoen over tid
     fig, ax = plt.subplots()
