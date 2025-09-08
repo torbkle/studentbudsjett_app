@@ -5,10 +5,22 @@ import datetime
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from fpdf import FPDF
+import os
+
 
 # 📌 Logo og introduksjon
 st.image("studentbudsjett_logo.png", width=200)
 st.write("Hold oversikt over inntekter og utgifter – og få prediksjon(beregning) på når du går tom for penger.")
+
+DATAFIL = "studentbudsjett_data.csv"
+
+if "transaksjoner" not in st.session_state:
+    if os.path.exists(DATAFIL):
+        df_lest = pd.read_csv(DATAFIL, parse_dates=["Dato"])
+        st.session_state["transaksjoner"] = df_lest.to_dict("records")
+    else:
+        st.session_state["transaksjoner"] = []
+
 
 # 📋 Sidepanel for transaksjoner
 st.sidebar.header("Legg til transaksjon")
@@ -19,8 +31,14 @@ date = st.sidebar.date_input("Dato", value=datetime.date.today())
 
 if st.sidebar.button("Legg til"):
     new_data = {"Dato": date, "Type": trans_type, "Beløp": amount, "Kategori": category}
-    st.session_state.setdefault("transaksjoner", []).append(new_data)
-    st.success("Transaksjon lagt til!")
+    st.session_state["transaksjoner"].append(new_data)
+
+    # Lagre til CSV
+    df_lagring = pd.DataFrame(st.session_state["transaksjoner"])
+    df_lagring.to_csv(DATAFIL, index=False)
+
+    st.success("Transaksjon lagt til og lagret!")
+
 
 # 📊 Vis transaksjoner og analyser
 st.subheader("📋 Dine transaksjoner")
