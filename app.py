@@ -4,8 +4,6 @@ import pandas as pd
 import datetime
 
 
-# Vis banner øverst
-st.image("banner.png", use_column_width=True)
 
 # Tittel og introduksjon
 st.title("📊 StudentBudsjett App")
