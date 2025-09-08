@@ -48,13 +48,14 @@ if not df.empty:
     df["Dato"] = pd.to_datetime(df["Dato"])
     st.dataframe(df)
 
-    # 🗑️ Slett alle data
-    if st.button("🗑️ Slett alle data"):
-        st.session_state["transaksjoner"] = []
-        if os.path.exists("studentbudsjett_data.csv"):
-            os.remove("studentbudsjett_data.csv")
-        st.success("Alle transaksjoner er slettet.")
-
+        # 🗑️ Slett alle data
+    st.markdown("### ⚠️ Slett alle transaksjoner")
+    if st.checkbox("Jeg bekrefter at jeg vil slette alle data permanent"):
+        if st.button("🗑️ Slett alle data"):
+            st.session_state["transaksjoner"] = []
+            if os.path.exists("studentbudsjett_data.csv"):
+                os.remove("studentbudsjett_data.csv")
+            st.success("Alle transaksjoner er slettet.")
 
     
     # 💾 Last ned transaksjoner som CSV
