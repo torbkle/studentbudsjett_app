@@ -6,8 +6,6 @@ from sklearn.linear_model import LinearRegression
 import numpy as np
 import matplotlib.pyplot as plt
 from fpdf import FPDF
-from io import BytesIO
-
 
 # 📌 Logo og introduksjon
 st.image("studentbudsjett_logo.png", width=200)
@@ -30,7 +28,7 @@ st.subheader("📋 Dine transaksjoner")
 df = pd.DataFrame(st.session_state.get("transaksjoner", []))
 
 if not df.empty:
-    df["Dato"] = pd.to_datetime(df["Dato"])  # 🔧 Sikre riktig datoformat
+    df["Dato"] = pd.to_datetime(df["Dato"])
     st.dataframe(df)
 
     # 💾 Last ned transaksjoner som CSV
@@ -39,10 +37,11 @@ if not df.empty:
         label="📥 Last ned transaksjoner (CSV)",
         data=csv_trans,
         file_name="studentbudsjett_transaksjoner.csv",
-        mime="text/csv"
+        mime="text/csv",
+        key="csv_trans"
     )
 
-    # 💰 Beregn saldo
+    # 💰 Beregn saldo og prediksjon
     df["Beløp_signed"] = df.apply(lambda row: row["Beløp"] if row["Type"] == "Inntekt" else -row["Beløp"], axis=1)
     df_sorted = df.sort_values("Dato")
     df_sorted["Saldo"] = df_sorted["Beløp_signed"].cumsum()
@@ -51,7 +50,6 @@ if not df.empty:
     saldo = df_sorted["Saldo"].iloc[-1]
     st.metric("💰 Nåværende saldo", f"{saldo:.2f} kr")
 
-    # 🔮 Prediksjon: Når går du tom for penger?
     X = df_sorted[["Dag"]]
     y = df_sorted["Saldo"]
     model = LinearRegression()
@@ -64,55 +62,14 @@ if not df.empty:
     else:
         st.success("🔮 Prediksjon: Saldoen din vokser – ingen fare for tom konto!")
 
-    # 📄 Generer PDF-rapport
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
-    pdf.set_font("DejaVu", size=12)
-
-    # Tittel og dato
-    pdf.cell(200, 10, txt="StudentBudsjett Rapport", ln=True, align="C")
-    pdf.cell(200, 10, txt=f"Dato: {datetime.date.today()}", ln=True, align="C")
-    pdf.ln(10)
-
-    # Saldo og prediksjon
-    pdf.cell(200, 10, txt=f"Nåværende saldo: {saldo:.2f} kr", ln=True)
-    if model.coef_[0] < 0:
-        pdf.cell(200, 10, txt=f"Prediksjon: Tom for penger rundt {dato_null.date()}", ln=True)
-    else:
-        pdf.cell(200, 10, txt="Prediksjon: Saldoen vokser – ingen fare for tom konto!", ln=True)
-    pdf.ln(10)
-
-    # Transaksjonstabell
-    pdf.cell(200, 10, txt="Transaksjoner:", ln=True)
-    for index, row in df.iterrows():
-        linje = f"{row['Dato'].date()} | {row['Type']} | {row['Beløp']} kr | {row['Kategori']}"
-        pdf.cell(200, 8, txt=linje, ln=True)
-
-    # Gjør PDF nedlastbar
-    pdf_bytes = pdf.output(dest='S').encode('latin1')
-    st.download_button(
-        label="📄 Last ned budsjett som PDF",
-        data=pdf_bytes,
-        file_name="studentbudsjett_rapport.pdf",
-        mime="application/pdf"
-    )
-
-    st.download_button(
-        label="📄 Last ned budsjett som PDF",
-        data=pdf_bytes,
-        file_name="studentbudsjett_rapport.pdf",
-        mime="application/pdf"
-    )
-
-    
     # 💾 Last ned saldohistorikk som CSV
     csv_saldo = df_sorted[["Dato", "Saldo"]].to_csv(index=False).encode("utf-8")
     st.download_button(
         label="📥 Last ned saldohistorikk (CSV)",
         data=csv_saldo,
         file_name="studentbudsjett_saldo.csv",
-        mime="text/csv"
+        mime="text/csv",
+        key="csv_saldo"
     )
 
     # 📈 Visualiser saldoen over tid
@@ -140,10 +97,11 @@ if not df.empty:
             label="📥 Last ned utgiftsfordeling (CSV)",
             data=csv_kategorier,
             file_name="studentbudsjett_utgifter.csv",
-            mime="text/csv"
+            mime="text/csv",
+            key="csv_kategorier"
         )
 
-        # ⚠️ Advarsel hvis én kategori overstiger 50 % av utgiftene
+        # ⚠️ Advarsel hvis én kategori dominerer
         total_utgift = kategori_sum.sum()
         største_kategori = kategori_sum.idxmax()
         andel = kategori_sum.max() / total_utgift
@@ -152,6 +110,33 @@ if not df.empty:
             st.error(f"⚠️ Advarsel: Kategori '{største_kategori}' utgjør {andel:.1%} av dine utgifter!")
         elif andel > 0.3:
             st.warning(f"🔎 Merk: Kategori '{største_kategori}' utgjør {andel:.1%} av dine utgifter.")
+
+    # 📄 PDF-rapport
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt="StudentBudsjett Rapport", ln=True, align="C")
+    pdf.cell(200, 10, txt=f"Dato: {datetime.date.today()}", ln=True, align="C")
+    pdf.ln(10)
+    pdf.cell(200, 10, txt=f"Nåværende saldo: {saldo:.2f} kr", ln=True)
+    if model.coef_[0] < 0:
+        pdf.cell(200, 10, txt=f"Prediksjon: Tom for penger rundt {dato_null.date()}", ln=True)
+    else:
+        pdf.cell(200, 10, txt="Prediksjon: Saldoen vokser – ingen fare for tom konto!", ln=True)
+    pdf.ln(10)
+    pdf.cell(200, 10, txt="Transaksjoner:", ln=True)
+    for index, row in df.iterrows():
+        linje = f"{row['Dato'].date()} | {row['Type']} | {row['Beløp']} kr | {row['Kategori']}"
+        pdf.cell(200, 8, txt=linje, ln=True)
+
+    pdf_bytes = pdf.output(dest='S').encode('latin1')
+    st.download_button(
+        label="📄 Last ned budsjett som PDF",
+        data=pdf_bytes,
+        file_name="studentbudsjett_rapport.pdf",
+        mime="application/pdf",
+        key="pdf_download"
+    )
 
 else:
     st.info("Ingen transaksjoner registrert ennå.")
