@@ -90,8 +90,14 @@ if not df.empty:
         pdf.cell(200, 8, txt=linje, ln=True)
 
     # Gjør PDF nedlastbar
-    buffer = BytesIO()
-    pdf.output(buffer)
+    pdf_bytes = pdf.output(dest='S').encode('latin1')
+    st.download_button(
+        label="📄 Last ned budsjett som PDF",
+        data=pdf_bytes,
+        file_name="studentbudsjett_rapport.pdf",
+        mime="application/pdf"
+    )
+
     st.download_button(
         label="📄 Last ned budsjett som PDF",
         data=buffer.getvalue(),
