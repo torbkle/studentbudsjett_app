@@ -18,6 +18,10 @@ En enkel og interaktiv Streamlit-app som hjelper studenter med å holde oversikt
 
 ![StudentBudsjett App](screenshot.png)
 
+---
+## 🌐 Live demo
+
+👉 [Åpne StudentBudsjett-appen](https://torbkle-streamlit-app.streamlit.app)
 
 ---
 
