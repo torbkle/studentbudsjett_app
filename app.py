@@ -31,15 +31,6 @@ if not df.empty:
     st.dataframe(df)
 
     # 💾 Last ned transaksjoner som CSV
-    csv = df.to_csv(index=False).encode("utf-8")
-    st.download_button(
-        label="📥 Last ned transaksjoner (CSV)",
-        data=csv,
-        file_name="studentbudsjett.csv",
-        mime="text/csv"
-    )
-
-    # 💾 Last ned transaksjoner som CSV
     csv_trans = df.to_csv(index=False).encode("utf-8")
     st.download_button(
         label="📥 Last ned transaksjoner (CSV)",
@@ -48,26 +39,16 @@ if not df.empty:
         mime="text/csv"
     )
 
-    # 💾 Last ned saldohistorikk som CSV
-    csv_saldo = df_sorted[["Dato", "Saldo"]].to_csv(index=False).encode("utf-8")
-    st.download_button(
-        label="📥 Last ned saldohistorikk (CSV)",
-        data=csv_saldo,
-        file_name="studentbudsjett_saldo.csv",
-        mime="text/csv"
-    )
-
-
     # 💰 Beregn saldo
-    saldo = df.apply(lambda row: row["Beløp"] if row["Type"] == "Inntekt" else -row["Beløp"], axis=1).sum()
-    st.metric("💰 Nåværende saldo", f"{saldo:.2f} kr")
-
-    # 🔮 Prediksjon: Når går du tom for penger?
     df["Beløp_signed"] = df.apply(lambda row: row["Beløp"] if row["Type"] == "Inntekt" else -row["Beløp"], axis=1)
     df_sorted = df.sort_values("Dato")
     df_sorted["Saldo"] = df_sorted["Beløp_signed"].cumsum()
     df_sorted["Dag"] = (df_sorted["Dato"] - df_sorted["Dato"].min()).dt.days
 
+    saldo = df_sorted["Saldo"].iloc[-1]
+    st.metric("💰 Nåværende saldo", f"{saldo:.2f} kr")
+
+    # 🔮 Prediksjon: Når går du tom for penger?
     X = df_sorted[["Dag"]]
     y = df_sorted["Saldo"]
     model = LinearRegression()
@@ -79,6 +60,15 @@ if not df.empty:
         st.warning(f"🔮 Prediksjon: Du går tom for penger rundt {dato_null.date()}")
     else:
         st.success("🔮 Prediksjon: Saldoen din vokser – ingen fare for tom konto!")
+
+    # 💾 Last ned saldohistorikk som CSV
+    csv_saldo = df_sorted[["Dato", "Saldo"]].to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="📥 Last ned saldohistorikk (CSV)",
+        data=csv_saldo,
+        file_name="studentbudsjett_saldo.csv",
+        mime="text/csv"
+    )
 
     # 📈 Visualiser saldoen over tid
     fig1, ax1 = plt.subplots()
@@ -108,7 +98,7 @@ if not df.empty:
             mime="text/csv"
         )
 
-    # ⚠️ Advarsel hvis én kategori overstiger 50 % av utgiftene
+        # ⚠️ Advarsel hvis én kategori overstiger 50 % av utgiftene
         total_utgift = kategori_sum.sum()
         største_kategori = kategori_sum.idxmax()
         andel = kategori_sum.max() / total_utgift
