@@ -5,12 +5,11 @@ import datetime
 
 
 
-# Tittel og introduksjon
-st.title("📊 StudentBudsjett App")
+# Vis logo og introduksjon
+st.image("studentbudsjett_logo.png", width=200)
 st.write("Hold oversikt over inntekter og utgifter – og få prediksjon på når du går tom for penger.")
 
-# Vis logo under introduksjon
-st.image("studentbudsjett_logo.png", width=200)
+
 
 st.sidebar.header("Legg til transaksjon")
 trans_type = st.sidebar.selectbox("Type", ["Inntekt", "Utgift"])
