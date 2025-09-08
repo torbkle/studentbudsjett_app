@@ -5,6 +5,9 @@ import datetime
 from sklearn.linear_model import LinearRegression
 import numpy as np
 import matplotlib.pyplot as plt
+from fpdf import FPDF
+from io import BytesIO
+
 
 # 📌 Logo og introduksjon
 st.image("studentbudsjett_logo.png", width=200)
@@ -61,6 +64,41 @@ if not df.empty:
     else:
         st.success("🔮 Prediksjon: Saldoen din vokser – ingen fare for tom konto!")
 
+    # 📄 Generer PDF-rapport
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    # Tittel og dato
+    pdf.cell(200, 10, txt="StudentBudsjett Rapport", ln=True, align="C")
+    pdf.cell(200, 10, txt=f"Dato: {datetime.date.today()}", ln=True, align="C")
+    pdf.ln(10)
+
+    # Saldo og prediksjon
+    pdf.cell(200, 10, txt=f"Nåværende saldo: {saldo:.2f} kr", ln=True)
+    if model.coef_[0] < 0:
+        pdf.cell(200, 10, txt=f"Prediksjon: Tom for penger rundt {dato_null.date()}", ln=True)
+    else:
+        pdf.cell(200, 10, txt="Prediksjon: Saldoen vokser – ingen fare for tom konto!", ln=True)
+    pdf.ln(10)
+
+    # Transaksjonstabell
+    pdf.cell(200, 10, txt="Transaksjoner:", ln=True)
+    for index, row in df.iterrows():
+        linje = f"{row['Dato'].date()} | {row['Type']} | {row['Beløp']} kr | {row['Kategori']}"
+        pdf.cell(200, 8, txt=linje, ln=True)
+
+    # Gjør PDF nedlastbar
+    buffer = BytesIO()
+    pdf.output(buffer)
+    st.download_button(
+        label="📄 Last ned budsjett som PDF",
+        data=buffer.getvalue(),
+        file_name="studentbudsjett_rapport.pdf",
+        mime="application/pdf"
+    )
+
+    
     # 💾 Last ned saldohistorikk som CSV
     csv_saldo = df_sorted[["Dato", "Saldo"]].to_csv(index=False).encode("utf-8")
     st.download_button(
