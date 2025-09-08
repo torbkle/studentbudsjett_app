@@ -1,3 +1,9 @@
+# Favicon
+
+![App-ikon](studentbudsjett_icon.png)
+
+---
+
 # Logo
 
 ![StudentBudsjett Logo](studentbudsjett_logo.png)
