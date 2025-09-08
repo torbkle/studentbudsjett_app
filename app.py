@@ -39,6 +39,24 @@ if not df.empty:
         mime="text/csv"
     )
 
+    # 💾 Last ned transaksjoner som CSV
+    csv_trans = df.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="📥 Last ned transaksjoner (CSV)",
+        data=csv_trans,
+        file_name="studentbudsjett_transaksjoner.csv",
+        mime="text/csv"
+    )
+
+    # 💾 Last ned saldohistorikk som CSV
+    csv_saldo = df_sorted[["Dato", "Saldo"]].to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="📥 Last ned saldohistorikk (CSV)",
+        data=csv_saldo,
+        file_name="studentbudsjett_saldo.csv",
+        mime="text/csv"
+    )
+
 
     # 💰 Beregn saldo
     saldo = df.apply(lambda row: row["Beløp"] if row["Type"] == "Inntekt" else -row["Beløp"], axis=1).sum()
@@ -80,6 +98,16 @@ if not df.empty:
         ax2.set_title("Fordeling av utgifter")
         st.subheader("📊 Fordeling av utgifter")
         st.pyplot(fig2)
+
+        # 💾 Last ned utgiftsfordeling som CSV
+        csv_kategorier = kategori_sum.reset_index().to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="📥 Last ned utgiftsfordeling (CSV)",
+            data=csv_kategorier,
+            file_name="studentbudsjett_utgifter.csv",
+            mime="text/csv"
+        )
+
     # ⚠️ Advarsel hvis én kategori overstiger 50 % av utgiftene
         total_utgift = kategori_sum.sum()
         største_kategori = kategori_sum.idxmax()
