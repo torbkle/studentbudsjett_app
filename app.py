@@ -70,6 +70,15 @@ if not df.empty:
         ax2.set_title("Fordeling av utgifter")
         st.subheader("📊 Fordeling av utgifter")
         st.pyplot(fig2)
+    # ⚠️ Advarsel hvis én kategori overstiger 50 % av utgiftene
+        total_utgift = kategori_sum.sum()
+        største_kategori = kategori_sum.idxmax()
+        andel = kategori_sum.max() / total_utgift
+
+        if andel > 0.5:
+            st.error(f"⚠️ Advarsel: Kategori '{største_kategori}' utgjør {andel:.1%} av dine utgifter!")
+        elif andel > 0.3:
+            st.warning(f"🔎 Merk: Kategori '{største_kategori}' utgjør {andel:.1%} av dine utgifter.")
 
 else:
     st.info("Ingen transaksjoner registrert ennå.")
