@@ -1,3 +1,7 @@
+[![StudentBudsjett Banner](banner.png)](https://torbkle-streamlit-app.streamlit.app)
+
+---
+
 # 📊 StudentBudsjett App
 
 En enkel og interaktiv Streamlit-app som hjelper studenter med å holde oversikt over inntekter og utgifter – og gir prediksjoner om når budsjettet går tomt.
