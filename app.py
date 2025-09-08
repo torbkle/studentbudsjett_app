@@ -27,6 +27,7 @@ st.subheader("📋 Dine transaksjoner")
 df = pd.DataFrame(st.session_state.get("transaksjoner", []))
 
 if not df.empty:
+    df["Dato"] = pd.to_datetime(df["Dato"])  # 🔧 Sikre riktig datoformat
     st.dataframe(df)
 
     # 💰 Beregn saldo
@@ -36,7 +37,6 @@ if not df.empty:
     # 🔮 Prediksjon: Når går du tom for penger?
     df["Beløp_signed"] = df.apply(lambda row: row["Beløp"] if row["Type"] == "Inntekt" else -row["Beløp"], axis=1)
     df_sorted = df.sort_values("Dato")
-    df_sorted["Dato"] = pd.to_datetime(df_sorted["Dato"])
     df_sorted["Saldo"] = df_sorted["Beløp_signed"].cumsum()
     df_sorted["Dag"] = (df_sorted["Dato"] - df_sorted["Dato"].min()).dt.days
 
@@ -51,22 +51,25 @@ if not df.empty:
         st.warning(f"🔮 Prediksjon: Du går tom for penger rundt {dato_null.date()}")
     else:
         st.success("🔮 Prediksjon: Saldoen din vokser – ingen fare for tom konto!")
-    # 🥧 Kakediagram over utgifter per kategori 
+
+    # 📈 Visualiser saldoen over tid
+    fig1, ax1 = plt.subplots()
+    ax1.plot(df_sorted["Dato"], df_sorted["Saldo"], marker="o", linestyle="-", color="teal")
+    ax1.set_title("Saldo over tid")
+    ax1.set_xlabel("Dato")
+    ax1.set_ylabel("Saldo (kr)")
+    ax1.grid(True)
+    st.pyplot(fig1)
+
+    # 🥧 Kakediagram over utgifter per kategori
     utgifter = df[df["Type"] == "Utgift"]
     if not utgifter.empty:
         kategori_sum = utgifter.groupby("Kategori")["Beløp"].sum()
+        fig2, ax2 = plt.subplots()
+        ax2.pie(kategori_sum, labels=kategori_sum.index, autopct="%1.1f%%", startangle=90)
+        ax2.set_title("Fordeling av utgifter")
         st.subheader("📊 Fordeling av utgifter")
-        st.write("Her ser du hvor pengene dine går:")
-        st.pyplot(kategori_sum.plot.pie(autopct="%1.1f%%", figsize=(5, 5), ylabel=""))
-
-    # 📈 Visualiser saldoen over tid
-    fig, ax = plt.subplots()
-    ax.plot(df_sorted["Dato"], df_sorted["Saldo"], marker="o", linestyle="-", color="teal")
-    ax.set_title("Saldo over tid")
-    ax.set_xlabel("Dato")
-    ax.set_ylabel("Saldo (kr)")
-    ax.grid(True)
-    st.pyplot(fig)
+        st.pyplot(fig2)
 
 else:
     st.info("Ingen transaksjoner registrert ennå.")
