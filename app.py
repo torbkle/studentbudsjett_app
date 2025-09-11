@@ -8,12 +8,6 @@ from pdf_report import generate_pdf
 from db_handler import init_db, insert_transaksjon, hent_data
 init_db()
 
-df = hent_data()
-df = beregn_saldo(df)
-
-
-st.set_page_config(page_title="StudentBudsjett", page_icon="📊", layout="wide")
-
 # 🔧 Beregn saldo
 def beregn_saldo(df):
     saldo = 0
@@ -23,6 +17,15 @@ def beregn_saldo(df):
         saldo_liste.append(saldo)
     df["Saldo"] = saldo_liste
     return df
+
+
+df = hent_data()
+df = beregn_saldo(df)
+
+
+st.set_page_config(page_title="StudentBudsjett", page_icon="📊", layout="wide")
+
+
 
 # 📥 Last inn data
 
