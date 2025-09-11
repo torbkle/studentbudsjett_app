@@ -40,21 +40,9 @@ from db_handler import tøm_database
 
 if utviklermodus:
     with st.sidebar.expander("🧪 Testverktøy", expanded=False):
-        st.markdown("### 📦 Eksporter til CSV")
+        st.markdown("Her kan du fylle databasen med testdata, tømme den helt, eller eksportere til CSV for backup.")
 
-        filnavn = st.text_input("Filnavn (uten .csv):", value="studentbudsjett_backup", key="csv_filnavn")
-        kun_filtrert = st.checkbox("Kun synlige transaksjoner", key="csv_filter_toggle")
-
-        if st.button("Eksporter", key="eksporter_csv"):
-            try:
-                eksport_df = df if not kun_filtrert else df[df["Vis"] == True] if "Vis" in df.columns else df
-                eksport_df.to_csv(f"{filnavn}.csv", index=False)
-                st.success(f"Backup lagret som {filnavn}.csv")
-            except Exception as e:
-                st.error(f"Feil under eksport: {e}")
-
-
-        if st.button("Fyll med testdata", key="fyll_testdata"):
+        if st.button("Fyll med testdata", key="devtools_fyll_testdata"):
             try:
                 legg_inn_testdata()
                 st.success("Testdata lagt inn!")
@@ -62,13 +50,27 @@ if utviklermodus:
             except Exception as e:
                 st.error(f"Feil under innlegging: {e}")
 
-        if st.button("Tøm databasen", key="tøm_db"):
+        if st.button("Tøm databasen", key="devtools_tøm_db"):
             try:
                 tøm_database()
                 st.success("Databasen er tømt.")
                 st.experimental_rerun()
             except Exception as e:
                 st.error(f"Feil under sletting: {e}")
+
+        st.markdown("### 📦 Eksporter til CSV")
+
+        filnavn = st.text_input("Filnavn (uten .csv):", value="studentbudsjett_backup", key="devtools_csv_filnavn")
+        kun_filtrert = st.checkbox("Kun synlige transaksjoner", key="devtools_csv_filter_toggle")
+
+        if st.button("Eksporter", key="devtools_eksporter_csv"):
+            try:
+                eksport_df = df if not kun_filtrert else df[df["Vis"] == True] if "Vis" in df.columns else df
+                eksport_df.to_csv(f"{filnavn}.csv", index=False)
+                st.success(f"Backup lagret som {filnavn}.csv")
+            except Exception as e:
+                st.error(f"Feil under eksport: {e}")
+
 
         # 📦 Eksporter til CSV
         if st.button("Eksporter til CSV", key="eksporter_csv"):
