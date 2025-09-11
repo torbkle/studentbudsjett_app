@@ -46,12 +46,26 @@ def vis(df):
     ).properties(height=300)
     st.altair_chart(linje, use_container_width=True)
 
-    # 📦 Eksport av filtrert data
+    # 📦 Eksport av filtrert data med filterinfo
     st.markdown("### 📤 Eksporter filtrert data")
     filnavn = st.text_input("Filnavn (uten .csv):", value="grafdata_eksport")
+    
     if st.button("Eksporter til CSV"):
         try:
-            filtrert_df.to_csv(f"{filnavn}.csv", index=False)
+            # Lag en ekstra rad med filterinfo
+            filterinfo = pd.DataFrame([{
+                "Dato": "FILTERINFO",
+                "Kategori": ", ".join(valgte_kategorier),
+                "Uke": f"{valgte_uker[0]}–{valgte_uker[1]}",
+                "Type": "",
+                "Beløp": "",
+                "Saldo": ""
+            }])
+    
+            # Kombiner filterinfo med filtrert data
+            eksport_df = pd.concat([filterinfo, filtrert_df], ignore_index=True)
+    
+            eksport_df.to_csv(f"{filnavn}.csv", index=False)
             st.success(f"Filtrert data lagret som {filnavn}.csv")
         except Exception as e:
             st.error(f"Feil under eksport: {e}")
