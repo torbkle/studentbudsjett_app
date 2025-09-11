@@ -1,23 +1,29 @@
 import streamlit as st
 
 def setup():
-    st.set_page_config(page_title="StudentBudsjett", page_icon="📊", layout="wide")
+    st.set_page_config(
+        page_title="StudentBudsjett",
+        page_icon="💸",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+    st.markdown("<style>footer {visibility: hidden;}</style>", unsafe_allow_html=True)
 
 def sidebar():
-    with st.sidebar:
-        st.image("studentbudsjett_logo.png", width=150)
-        st.markdown("## 📋 Navigasjon")
-        valg = st.radio(
-            "Velg seksjon:",
-            [
-                "📄 Oversikt",
-                "📊 Analyse",
-                "📈 Grafer",
-                "🔮 Prediksjon",
-                "📥 PDF-rapport",
-                "➕ Legg til transaksjon"
-            ],
-            key="navigasjon_radio"
-        )
-        utviklermodus = st.checkbox("🛠️ Utviklermodus", key="utviklermodus_toggle")
-        return valg, utviklermodus
+    st.sidebar.image("studentbudsjett_logo.png", use_column_width=True)
+    st.sidebar.markdown("## Navigasjon")
+
+    valg = st.sidebar.radio(
+        "Velg visning:",
+        [
+            "📄 Oversikt",
+            "📊 Analyse",
+            "📈 Grafer",
+            "🔮 Prediksjon",
+            "📥 PDF-rapport",
+            "➕ Legg til transaksjon"
+        ]
+    )
+
+    utviklermodus = st.sidebar.checkbox("Utviklermodus", value=False)
+    return valg, utviklermodus
