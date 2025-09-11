@@ -89,6 +89,7 @@ elif valg == "📥 PDF-rapport":
 # ➕ Legg til transaksjon
 elif valg == "➕ Legg til transaksjon":
     st.markdown("## ➕ Legg til ny transaksjon")
+    submitted = False
     with st.form("ny_transaksjon"):
         dato = st.date_input("Dato", value=datetime.today())
         type_ = st.selectbox("Type", ["Inntekt", "Utgift"])
@@ -107,6 +108,8 @@ elif valg == "➕ Legg til transaksjon":
             df.sort_values("Dato", inplace=True)
             df = beregn_saldo(df)
             df.to_csv("studentbudsjett_data.csv", index=False)
-            st.success("Transaksjon lagt til!")
-            st.experimental_rerun()
+            submitted = True
 
+    if submitted:
+        st.success("Transaksjon lagt til!")
+        st.experimental_rerun()
