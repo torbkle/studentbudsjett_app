@@ -34,7 +34,8 @@ init_db()
 
 df = hent_data()
 df = beregn_saldo(df)
-valg = sidebar()
+valg, utviklermodus = sidebar()
+
 
 from db_handler import tøm_database
 
