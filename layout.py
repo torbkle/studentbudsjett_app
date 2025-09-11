@@ -7,8 +7,17 @@ def sidebar():
     with st.sidebar:
         st.image("studentbudsjett_logo.png", width=150)
         st.markdown("## 📋 Navigasjon")
-        valg = st.radio("Velg seksjon:", [
-            "📄 Oversikt", "📊 Analyse", "📈 Grafer", "🔮 Prediksjon", "📥 PDF-rapport", "➕ Legg til transaksjon"
-        ])
+        valg = st.radio(
+            "Velg seksjon:",
+            [
+                "📄 Oversikt",
+                "📊 Analyse",
+                "📈 Grafer",
+                "🔮 Prediksjon",
+                "📥 PDF-rapport",
+                "➕ Legg til transaksjon"
+            ],
+            key="navigasjon_radio"
+        )
         utviklermodus = st.checkbox("🛠️ Utviklermodus", key="utviklermodus_toggle")
         return valg, utviklermodus
