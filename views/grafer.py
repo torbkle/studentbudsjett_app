@@ -45,3 +45,14 @@ def vis(df):
         tooltip=["Dato", "Saldo"]
     ).properties(height=300)
     st.altair_chart(linje, use_container_width=True)
+
+    # 📦 Eksport av filtrert data
+    st.markdown("### 📤 Eksporter filtrert data")
+    filnavn = st.text_input("Filnavn (uten .csv):", value="grafdata_eksport")
+    if st.button("Eksporter til CSV"):
+        try:
+            filtrert_df.to_csv(f"{filnavn}.csv", index=False)
+            st.success(f"Filtrert data lagret som {filnavn}.csv")
+        except Exception as e:
+            st.error(f"Feil under eksport: {e}")
+
