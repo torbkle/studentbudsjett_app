@@ -43,3 +43,16 @@ def tøm_database():
     conn.execute("DELETE FROM transaksjoner")
     conn.commit()
     conn.close()
+
+def hent_saldo(df):
+    if "Saldo" in df.columns:
+        return df["Saldo"].iloc[-1]
+    else:
+        # Hvis saldo ikke er forhåndsberegnet, beregn den her:
+        saldo = 0
+        for _, row in df.iterrows():
+            if row["Type"] == "Inntekt":
+                saldo += row["Beløp"]
+            elif row["Type"] == "Utgift":
+                saldo -= row["Beløp"]
+        return saldo
