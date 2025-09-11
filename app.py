@@ -24,6 +24,19 @@ def load_data():
 
 df = load_data()
 
+def beregn_saldo(df):
+    saldo = 0
+    saldo_liste = []
+    for _, row in df.iterrows():
+        if row["Type"] == "Inntekt":
+            saldo += row["Beløp"]
+        elif row["Type"] == "Utgift":
+            saldo -= row["Beløp"]
+        saldo_liste.append(saldo)
+    df["Saldo"] = saldo_liste
+    return df
+
+
 # 📋 Vis transaksjoner
 st.subheader("📋 Dine transaksjoner")
 st.dataframe(df, use_container_width=True)
