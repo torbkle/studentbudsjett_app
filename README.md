@@ -21,3 +21,16 @@ git clone https://github.com/torbkle/studentbudsjett_app.git
 cd studentbudsjett_app
 pip install -r requirements.txt
 streamlit run app.py
+git clone https://github.com/torbkle/studentbudsjett_app.git
+cd studentbudsjett_app
+pip install -r requirements.txt
+streamlit run app.py
+studentbudsjett_app/
+├── app.py               # Hovedapplikasjon / Main app
+├── db_handler.py        # SQLite-håndtering / DB handler
+├── analyzer.py          # Budsjettanalyse / Budget analysis
+├── visualizer.py        # Grafer / Charts
+├── predictor.py         # Prediksjon / Prediction
+├── pdf_report.py        # PDF-generering / PDF generation
+├── requirements.txt     # Avhengigheter / Dependencies
+└── README.md            # Dokumentasjon / Documentation
