@@ -12,19 +12,7 @@ st.set_page_config(page_title="StudentBudsjett", page_icon="📊", layout="cente
 st.image("studentbudsjett_logo.png", width=150)
 st.title("📊 StudentBudsjett App")
 
-# 📥 Last inn data
-@st.cache_data
-def load_data():
-    try:
-        df = pd.read_csv("studentbudsjett_data.csv", parse_dates=["Dato"])
-        df.sort_values("Dato", inplace=True)
-        return df
-    except FileNotFoundError:
-        return pd.DataFrame(columns=["Dato", "Type", "Beløp", "Kategori", "Saldo"])
-
-df = load_data()
-df = beregn_saldo(df)
-
+# 🔧 Beregn saldo dynamisk
 def beregn_saldo(df):
     saldo = 0
     saldo_liste = []
@@ -36,6 +24,19 @@ def beregn_saldo(df):
         saldo_liste.append(saldo)
     df["Saldo"] = saldo_liste
     return df
+
+# 📥 Last inn data
+@st.cache_data
+def load_data():
+    try:
+        df = pd.read_csv("studentbudsjett_data.csv", parse_dates=["Dato"])
+        df.sort_values("Dato", inplace=True)
+        return df
+    except FileNotFoundError:
+        return pd.DataFrame(columns=["Dato", "Type", "Beløp", "Kategori"])
+
+df = load_data()
+df = beregn_saldo(df)
 
 # 📋 Vis transaksjoner
 st.subheader("📋 Dine transaksjoner")
@@ -79,10 +80,11 @@ with st.form("ny_transaksjon"):
             "Dato": [pd.to_datetime(dato)],
             "Type": [type_],
             "Beløp": [beløp],
-            "Kategori": [kategori],
-            "Saldo": [df["Saldo"].iloc[-1] + beløp if type_ == "Inntekt" else df["Saldo"].iloc[-1] - beløp] if not df.empty else [beløp if type_ == "Inntekt" else -beløp]
+            "Kategori": [kategori]
         })
         df = pd.concat([df, ny_rad], ignore_index=True)
+        df.sort_values("Dato", inplace=True)
+        df = beregn_saldo(df)
         df.to_csv("studentbudsjett_data.csv", index=False)
         st.success("Transaksjon lagt til! Oppdater siden for å se endringen.")
 
