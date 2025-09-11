@@ -45,19 +45,28 @@ if utviklermodus:
         if st.button("Fyll med testdata", key="devtools_fyll_testdata"):
             try:
                 legg_inn_testdata()
-                st.success("Testdata lagt inn!")
+                df = hent_data()
+                antall = len(df)
+                saldo = df["Beløp"].where(df["Type"] == "Inntekt", -df["Beløp"]).sum()
+        
+                st.success(f"{antall} transaksjoner lagt inn. Total saldo: {saldo:.2f} kr")
+                st.dataframe(df.tail(5), use_container_width=True)
                 st.rerun()
             except Exception as e:
                 st.error(f"Feil under innlegging: {e}")
 
 
-        if st.button("Tøm databasen", key="devtools_tøm_db"):
+
+       if st.button("Tøm databasen", key="devtools_tøm_db"):
             try:
                 tøm_database()
+                df_tom = hent_data()
                 st.success("Databasen er tømt.")
+                st.dataframe(df_tom, use_container_width=True)
                 st.rerun()
             except Exception as e:
                 st.error(f"Feil under sletting: {e}")
+
 
 
         st.markdown("### 📦 Eksporter til CSV")
