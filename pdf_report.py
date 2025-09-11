@@ -1,7 +1,9 @@
 from fpdf import FPDF
 import datetime
 import pandas as pd
-from predictor import lag_prediksjonstekst, ukesaldo, ukekategorier
+from predictor import lag_prediksjonstekst
+from ukeanalyse import ukesaldo, ukekategorier
+
 from db_handler import hent_saldo
 
 def generate_pdf(df, saldo, prediksjonstekst, ukesaldo, ukekategorier):
