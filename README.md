@@ -67,4 +67,4 @@ Prosjektet er fritt tilgjengelig for læring og personlig bruk. This project is 
 🙋‍♂️ Bidrag / Contributing
 Har du forslag eller ønsker å bidra? Do you have suggestions or want to contribute?
 
-Send en pull request eller kontakt @torbkle.
+Send en pull request eller kontakt torbjoernkleiven@gmail.com
