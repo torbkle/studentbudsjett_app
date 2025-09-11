@@ -107,4 +107,6 @@ elif valg == "➕ Legg til transaksjon":
             df.sort_values("Dato", inplace=True)
             df = beregn_saldo(df)
             df.to_csv("studentbudsjett_data.csv", index=False)
-            st.success("Transaksjon lagt til! Oppdater siden for å se endringen.")
+            st.success("Transaksjon lagt til!")
+            st.experimental_rerun()
+
