@@ -1,10 +1,14 @@
 import streamlit as st
 
-from pdf_report import generate_pdf
+from pdf_report import lag_pdf_rapport
 
 def vis(df):
-    st.markdown("## 📥 Generer PDF-rapport")
-    if st.button("Generer PDF"):
-        df["Uke"] = df["Dato"].dt.isocalendar().week
-        generate_pdf(df)
-        st.success("PDF generert.")
+    st.markdown("## 📥 PDF-rapport")
+    try:
+        lag_pdf_rapport(df)
+        with open("rapport.pdf", "rb") as f:
+            st.download_button("Last ned PDF", f, file_name="StudentBudsjett_Rapport.pdf")
+        st.success("PDF generert!")
+    except Exception as e:
+        st.error(f"Feil under PDF-generering: {e}")
+
