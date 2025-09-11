@@ -46,9 +46,10 @@ if utviklermodus:
             try:
                 legg_inn_testdata()
                 st.success("Testdata lagt inn!")
-                st.experimental_rerun()
+                st.rerun()
             except Exception as e:
                 st.error(f"Feil under innlegging: {e}")
+
 
         if st.button("Tøm databasen", key="devtools_tøm_db"):
             try:
