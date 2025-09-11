@@ -57,7 +57,7 @@ if utviklermodus:
 
 
 
-       if st.button("Tøm databasen", key="devtools_tøm_db"):
+        if st.button("Tøm databasen", key="devtools_tøm_db"):
             try:
                 tøm_database()
                 df_tom = hent_data()
