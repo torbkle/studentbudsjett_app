@@ -60,10 +60,6 @@ Test appen direkte via Streamlit Cloud: Åpne StudentBudsjett-demoen
 Dette prosjektet er åpent og fritt å bruke for læring og personlig bruk. Du står fritt til å tilpasse og forbedre det.
 
 🙋‍♂️ Bidrag
-Har du forslag, feilrapporter eller ønsker å bidra? Send gjerne en pull request eller kontakt @torbkle.
+Har du forslag, feilrapporter eller ønsker å bidra? Send gjerne en pull request eller kontakt torbjoernkleiven@gmail.com
 
-Code
 
----
-
-Bare kopier hele blokken over og lim den inn i `README.md`-filen din på GitHub. Vil du at jeg skal hjelpe deg med å legge inn skjermbilder eller lage en engelsk versjon også? Da blir det ekstra innbydende for både medstudenter og fremtidige arbeidsgivere.
