@@ -54,9 +54,10 @@ if utviklermodus:
             try:
                 tøm_database()
                 st.success("Databasen er tømt.")
-                st.experimental_rerun()
+                st.rerun()
             except Exception as e:
                 st.error(f"Feil under sletting: {e}")
+
 
         st.markdown("### 📦 Eksporter til CSV")
 
