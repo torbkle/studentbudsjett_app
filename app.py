@@ -34,15 +34,24 @@ init_db()
 
 df = hent_data()
 df = beregn_saldo(df)
-valg = sidebar()
+valg, utviklermodus = sidebar()
+
 
 from db_handler import tøm_database
 
-if st.sidebar.checkbox("🧹 Tøm databasen"):
-    if st.sidebar.button("Bekreft sletting"):
+if utviklermodus:
+    st.sidebar.markdown("## 🧪 Testverktøy")
+
+    if st.sidebar.button("Fyll med testdata"):
+        legg_inn_testdata()
+        st.success("Testdata lagt inn!")
+        st.experimental_rerun()
+
+    if st.sidebar.button("Tøm databasen"):
         tøm_database()
         st.success("Databasen er tømt.")
         st.experimental_rerun()
+
 
 
 if valg == "📄 Oversikt":
