@@ -13,3 +13,11 @@ def predict_zero_balance(df_sorted):
         return dato_null.date(), model.coef_[0]
     else:
         return None, model.coef_[0]
+
+def lag_prediksjonstekst(df):
+    df_sorted = df.sort_values("Dato")
+    dato_null, trend = predict_zero_balance(df_sorted)
+    if dato_null:
+        return f"Saldoen forventes å nå 0 kr rundt {dato_null} (trend: {trend:.2f} kr/dag)"
+    else:
+        return f"Saldoen øker eller er stabil (trend: {trend:.2f} kr/dag)"
