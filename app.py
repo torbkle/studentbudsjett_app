@@ -1,11 +1,15 @@
 # app.py
 import streamlit as st
+from data_loader import load_data
+from analyzer import calculate_totals
+from visualizer import plot_expenses
 import pandas as pd
 import datetime
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from fpdf import FPDF
 import os
+
 
 
 # 📌 Logo og introduksjon
@@ -57,7 +61,30 @@ if not df.empty:
                 os.remove("studentbudsjett_data.csv")
             st.success("Alle transaksjoner er slettet.")
 
-    
+    # 📊 Enkel budsjettanalyse
+    st.subheader("📊 Budsjettanalyse")
+
+    # Total utgift og inntekt
+    total_utgift = df[df["Type"] == "Utgift"]["Beløp"].sum()
+    total_inntekt = df[df["Type"] == "Inntekt"]["Beløp"].sum()
+
+    st.write(f"Totale utgifter: {total_utgift:.2f} kr")
+    st.write(f"Totale inntekter: {total_inntekt:.2f} kr")
+
+    # 💡 Sparetips
+    if total_utgift > total_inntekt:
+        st.warning("Du bruker mer enn du tjener. Vurder å kutte ned på 'Fritid' eller 'Mat'.")
+    else:
+        st.success("Bra jobbet! Du har positiv balanse.")
+
+# 📈 Visualisering
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots()
+df.groupby("Kategori")["Beløp"].sum().plot(kind="bar", ax=ax)
+ax.set_title("Utgifter per kategori")
+st.pyplot(fig)
+
     # 💾 Last ned transaksjoner som CSV
     csv_trans = df.to_csv(index=False).encode("utf-8")
     st.download_button("📥 Last ned transaksjoner (CSV)", csv_trans, "studentbudsjett_transaksjoner.csv", "text/csv", key="csv_trans")
