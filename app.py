@@ -48,12 +48,12 @@ if utviklermodus:
         st.experimental_rerun()
 
     if st.sidebar.button("Bekreft sletting"):
-    try:
-        tøm_database()
-        st.success("Databasen er tømt.")
-        st.experimental_rerun()
-    except Exception as e:
-        st.error(f"Feil under sletting: {e}")
+        try:
+            tøm_database()
+            st.success("Databasen er tømt.")
+            st.experimental_rerun()
+        except Exception as e:
+            st.error(f"Feil under sletting: {e}")
 
 
 
