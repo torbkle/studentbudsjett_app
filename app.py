@@ -101,17 +101,9 @@ elif valg == "➕ Legg til transaksjon":
         submit = st.form_submit_button("Legg til")
 
         if submit and kategori:
-            ny_rad = pd.DataFrame({
-                "Dato": [pd.to_datetime(dato)],
-                "Type": [type_],
-                "Beløp": [beløp],
-                "Kategori": [kategori]
-            })
-            df = pd.concat([df, ny_rad], ignore_index=True)
-            df.sort_values("Dato", inplace=True)
-            df = beregn_saldo(df)
-            df.to_csv("studentbudsjett_data.csv", index=False)
+            insert_transaksjon(dato, type_, beløp, kategori)
             submitted = True
+
 
     if submitted:
         st.success("Transaksjon lagt til!")
