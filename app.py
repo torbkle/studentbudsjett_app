@@ -5,6 +5,9 @@ from analyzer import calculate_totals, generate_savings_tip
 from visualizer import plot_expense_bar, plot_saldo, plot_pie_chart
 from predictor import predict_zero_balance
 from pdf_report import generate_pdf
+from db_handler import init_db, insert_transaksjon, hent_data
+init_db()
+
 
 st.set_page_config(page_title="StudentBudsjett", page_icon="📊", layout="wide")
 
