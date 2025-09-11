@@ -10,12 +10,8 @@ def sidebar():
         valg = st.radio("Velg seksjon:", [
             "📄 Oversikt", "📊 Analyse", "📈 Grafer", "🔮 Prediksjon", "📥 PDF-rapport", "➕ Legg til transaksjon"
         ])
-        
-        # 🔧 Utviklerknapp (kun for deg)
-        if st.checkbox("🧪 Fyll med testdata"):
-            from app import legg_inn_testdata
-            legg_inn_testdata()
-            st.success("Testdata lagt inn!")
-            st.experimental_rerun()
 
-        return valg
+        # 🧪 Utviklermodus
+        utviklermodus = st.checkbox("🛠️ Utviklermodus")
+
+        return valg, utviklermodus
