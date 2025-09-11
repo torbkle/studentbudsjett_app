@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from db_handler import init_db, hent_data
+
+from db_handler import init_db, hent_data, tøm_database
 from layout import setup, sidebar
 from views import oversikt, analyse, grafer, prediksjon, pdf_rapport, legg_til
 
@@ -13,6 +14,7 @@ def beregn_saldo(df):
         saldo_liste.append(saldo)
     df["Saldo"] = saldo_liste
     return df
+
 def legg_inn_testdata():
     from db_handler import insert_transaksjon
     testdata = [
@@ -26,18 +28,14 @@ def legg_inn_testdata():
     for dato, type_, beløp, kategori in testdata:
         insert_transaksjon(dato, type_, beløp, kategori)
 
+# 🚀 Init
 setup()
 init_db()
-
-
-
-
 df = hent_data()
 df = beregn_saldo(df)
 valg, utviklermodus = sidebar()
 
-from db_handler import tøm_database
-
+# 🛠️ Utviklermodus
 if utviklermodus:
     with st.sidebar.expander("🧪 Testverktøy", expanded=False):
         st.markdown("Her kan du fylle databasen med testdata, tømme den helt, eller eksportere til CSV for backup.")
@@ -48,14 +46,11 @@ if utviklermodus:
                 df = hent_data()
                 antall = len(df)
                 saldo = df["Beløp"].where(df["Type"] == "Inntekt", -df["Beløp"]).sum()
-        
                 st.success(f"{antall} transaksjoner lagt inn. Total saldo: {saldo:.2f} kr")
                 st.dataframe(df.tail(5), use_container_width=True)
                 st.rerun()
             except Exception as e:
                 st.error(f"Feil under innlegging: {e}")
-
-
 
         if st.button("Tøm databasen", key="devtools_tøm_db"):
             try:
@@ -67,10 +62,7 @@ if utviklermodus:
             except Exception as e:
                 st.error(f"Feil under sletting: {e}")
 
-
-
         st.markdown("### 📦 Eksporter til CSV")
-
         filnavn = st.text_input("Filnavn (uten .csv):", value="studentbudsjett_backup", key="devtools_csv_filnavn")
         kun_filtrert = st.checkbox("Kun synlige transaksjoner", key="devtools_csv_filter_toggle")
 
@@ -82,16 +74,7 @@ if utviklermodus:
             except Exception as e:
                 st.error(f"Feil under eksport: {e}")
 
-
-        # 📦 Eksporter til CSV
-        if st.button("Eksporter til CSV", key="eksporter_csv"):
-            try:
-                df.to_csv("studentbudsjett_backup.csv", index=False)
-                st.success("Backup lagret som studentbudsjett_backup.csv")
-            except Exception as e:
-                st.error(f"Feil under eksport: {e}")
-
-
+# 🧭 Navigasjon
 if valg == "📄 Oversikt":
     oversikt.vis(df)
 elif valg == "📊 Analyse":
