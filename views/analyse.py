@@ -1,7 +1,10 @@
 import streamlit as st
 from analyzer import calculate_totals, generate_savings_tip
+from components.tabell import vis_tabell
 
 def vis(df):
+    st.markdown("## 📊 Analyse")
+    vis_tabell(df[df["Type"] == "Utgift"], tittel="Utgifter")
     st.markdown("## 📊 Budsjettanalyse")
     inntekt, utgift = calculate_totals(df)
     col1, col2 = st.columns(2)
