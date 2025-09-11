@@ -111,5 +111,7 @@ elif valg == "➕ Legg til transaksjon":
             submitted = True
 
     if submitted:
-        st.success("Transaksjon lagt til!")
+    st.success("Transaksjon lagt til!")
+    if st.button("🔄 Oppdater visning"):
         st.experimental_rerun()
+
