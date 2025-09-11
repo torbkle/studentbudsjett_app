@@ -23,6 +23,7 @@ def load_data():
         return pd.DataFrame(columns=["Dato", "Type", "Beløp", "Kategori", "Saldo"])
 
 df = load_data()
+df = beregn_saldo(df)
 
 def beregn_saldo(df):
     saldo = 0
@@ -35,7 +36,6 @@ def beregn_saldo(df):
         saldo_liste.append(saldo)
     df["Saldo"] = saldo_liste
     return df
-
 
 # 📋 Vis transaksjoner
 st.subheader("📋 Dine transaksjoner")
