@@ -8,6 +8,9 @@ from pdf_report import generate_pdf
 from db_handler import init_db, insert_transaksjon, hent_data
 init_db()
 
+df = hent_data()
+df = beregn_saldo(df)
+
 
 st.set_page_config(page_title="StudentBudsjett", page_icon="📊", layout="wide")
 
@@ -22,17 +25,7 @@ def beregn_saldo(df):
     return df
 
 # 📥 Last inn data
-@st.cache_data
-#def load_data():
-    try:
-        df = pd.read_csv("studentbudsjett_data.csv", parse_dates=["Dato"])
-        df.sort_values("Dato", inplace=True)
-        return df
-    except FileNotFoundError:
-        return pd.DataFrame(columns=["Dato", "Type", "Beløp", "Kategori"])
 
-df = hent_data()
-df = beregn_saldo(df)
 
 # 🧭 Navigasjonsmeny med ikoner
 with st.sidebar:
