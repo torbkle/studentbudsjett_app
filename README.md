@@ -1,61 +1,17 @@
-# Favicon
+# 📊 StudentBudsjett
 
-![App-ikon](favicon.png)
-
----
-
-# Logo
-
-![StudentBudsjett Logo](studentbudsjett_logo.png)
-
----
-# Banner
-
-[![StudentBudsjett Banner](banner.png)](https://torbkle-streamlit-app.streamlit.app)
+En enkel og mobilvennlig budsjettapp for studenter, bygget med Streamlit og SQLite. Appen lar deg registrere inntekter og utgifter, visualisere saldo og utgiftsmønstre, og generere PDF-rapporter.
 
 ---
 
-# 📊 StudentBudsjett App
+## 🚀 Kom i gang
 
-En enkel og interaktiv Streamlit-app som hjelper studenter med å holde oversikt over inntekter og utgifter – og gir prediksjoner om når budsjettet går tomt.
-
----
-
-## 🚀 Funksjoner
-
-- ✅ Legg til inntekter og utgifter med dato og kategori  
-- 📋 Se transaksjoner i tabellformat  
-- 💰 Få oppdatert saldo i sanntid  
-- 🔮 Prediksjon: Estimer når du går tom for penger  
-- 💡 Tips: Hvordan justere forbruk for å forlenge budsjettet  
-
----
-
-## 🖼️ Skjermbilde
-
-![StudentBudsjett App](screenshot.png)
-
----
-## 🌐 Live demo
-
-👉 [Åpne StudentBudsjett-appen](https://torbkle-streamlit-app.streamlit.app)
-
----
-
-## 🛠️ Teknologi brukt
-
-| Komponent     | Verktøy           |
-|---------------|-------------------|
-| Frontend      | Streamlit         |
-| Databehandling| Pandas            |
-| Modellering   | scikit-learn (kommer) |
-| Visualisering | Matplotlib / Plotly (kommer) |
-
----
-
-## 📦 Installasjon
+### 1. Klon repoet
 
 ```bash
+git clone https://github.com/torbkle/studentbudsjett_app.git
+cd studentbudsjett_app
+
 git clone https://github.com/torbkle/studentbudsjett_app.git
 cd studentbudsjett_app
 pip install -r requirements.txt
