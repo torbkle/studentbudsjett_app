@@ -1,4 +1,3 @@
-markdown
 # 📊 StudentBudsjett
 
 StudentBudsjett er en mobilvennlig og brukervennlig budsjettapp for studenter, bygget med Streamlit og SQLite. Appen lar deg registrere inntekter og utgifter, visualisere saldo og utgiftsmønstre, og generere PDF-rapporter. Den er designet for enkel bruk både på mobil og desktop, og gir innsikt i økonomien din på en oversiktlig måte.
