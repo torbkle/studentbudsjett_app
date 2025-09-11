@@ -40,6 +40,8 @@ from db_handler import tøm_database
 
 if utviklermodus:
     with st.sidebar.expander("🧪 Testverktøy", expanded=False):
+        st.markdown("Her kan du fylle databasen med testdata, tømme den helt, eller eksportere til CSV for backup.")
+
         if st.button("Fyll med testdata", key="fyll_testdata"):
             try:
                 legg_inn_testdata()
@@ -56,6 +58,13 @@ if utviklermodus:
             except Exception as e:
                 st.error(f"Feil under sletting: {e}")
 
+        # 📦 Eksporter til CSV
+        if st.button("Eksporter til CSV", key="eksporter_csv"):
+            try:
+                df.to_csv("studentbudsjett_backup.csv", index=False)
+                st.success("Backup lagret som studentbudsjett_backup.csv")
+            except Exception as e:
+                st.error(f"Feil under eksport: {e}")
 
 
 if valg == "📄 Oversikt":
