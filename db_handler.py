@@ -37,3 +37,9 @@ def slett_transaksjon(transaksjon_id):
     conn.execute("DELETE FROM transaksjoner WHERE id = ?", (transaksjon_id,))
     conn.commit()
     conn.close()
+    
+def tøm_database():
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM transaksjoner")
+    conn.commit()
+    conn.close()
