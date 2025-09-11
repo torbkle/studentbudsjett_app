@@ -5,6 +5,10 @@ from datetime import datetime
 from db_handler import init_db, hent_data, tøm_database
 from layout import setup, sidebar
 from views import oversikt, analyse, grafer, prediksjon, pdf_rapport, legg_til
+from components.infoboks import vis_infoboks
+from components.tabell import vis_tabell
+from components.advarsel import vis_advarsel
+
 
 def beregn_saldo(df):
     saldo = 0
