@@ -36,6 +36,15 @@ df = hent_data()
 df = beregn_saldo(df)
 valg = sidebar()
 
+from db_handler import tøm_database
+
+if st.sidebar.checkbox("🧹 Tøm databasen"):
+    if st.sidebar.button("Bekreft sletting"):
+        tøm_database()
+        st.success("Databasen er tømt.")
+        st.experimental_rerun()
+
+
 if valg == "📄 Oversikt":
     oversikt.vis(df)
 elif valg == "📊 Analyse":
