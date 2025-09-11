@@ -1,5 +1,8 @@
 from fpdf import FPDF
 import datetime
+import pandas as pd
+from predictor import lag_prediksjonstekst, ukesaldo, ukekategorier
+from db_handler import hent_saldo
 
 def generate_pdf(df, saldo, prediksjonstekst, ukesaldo, ukekategorier):
     pdf = FPDF()
@@ -33,3 +36,12 @@ def generate_pdf(df, saldo, prediksjonstekst, ukesaldo, ukekategorier):
             pdf.cell(200, 8, txt=f" {kategori}: {beløp:.2f} kr", ln=True)
 
     return pdf
+
+def lag_pdf_rapport(df):
+    saldo = hent_saldo(df)
+    prediksjonstekst = lag_prediksjonstekst(df)
+    saldo_per_uke = ukesaldo(df)
+    kategorier_per_uke = ukekategorier(df)
+
+    pdf = generate_pdf(df, saldo, prediksjonstekst, saldo_per_uke, kategorier_per_uke)
+    pdf.output("rapport.pdf")
