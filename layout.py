@@ -10,8 +10,5 @@ def sidebar():
         valg = st.radio("Velg seksjon:", [
             "📄 Oversikt", "📊 Analyse", "📈 Grafer", "🔮 Prediksjon", "📥 PDF-rapport", "➕ Legg til transaksjon"
         ])
-
-        # 🧪 Utviklermodus
-        utviklermodus = st.checkbox("🛠️ Utviklermodus")
-
+        utviklermodus = st.checkbox("🛠️ Utviklermodus", key="utviklermodus_toggle")
         return valg, utviklermodus
