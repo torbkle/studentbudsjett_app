@@ -40,7 +40,8 @@ valg, utviklermodus = sidebar()
 from db_handler import tøm_database
 
 # 🛠️ Utviklermodus og testverktøy
-if st.sidebar.checkbox("🛠️ Utviklermodus", key="utviklermodus_toggle"):
+if utviklermodus:
+
 
     st.sidebar.markdown("## 🧪 Testverktøy")
 
