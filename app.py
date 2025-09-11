@@ -39,10 +39,11 @@ valg = sidebar()
 from db_handler import tøm_database
 
 # 🛠️ Utviklermodus og testverktøy
-if st.sidebar.checkbox("🛠️ Utviklermodus"):
+if st.sidebar.checkbox("🛠️ Utviklermodus", key="utviklermodus_toggle"):
+
     st.sidebar.markdown("## 🧪 Testverktøy")
 
-    if st.sidebar.button("Fyll med testdata"):
+    if st.sidebar.button("Fyll med testdata", key="fyll_testdata"):
         try:
             legg_inn_testdata()
             st.success("Testdata lagt inn!")
@@ -50,7 +51,7 @@ if st.sidebar.checkbox("🛠️ Utviklermodus"):
         except Exception as e:
             st.error(f"Feil under innlegging: {e}")
 
-    if st.sidebar.button("Tøm databasen"):
+    if st.sidebar.button("Tøm databasen", key="tøm_db"):
         try:
             tøm_database()
             st.success("Databasen er tømt.")
