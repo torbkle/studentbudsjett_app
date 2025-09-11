@@ -7,6 +7,15 @@ def sidebar():
     with st.sidebar:
         st.image("studentbudsjett_logo.png", width=150)
         st.markdown("## 📋 Navigasjon")
-        return st.radio("Velg seksjon:", [
+        valg = st.radio("Velg seksjon:", [
             "📄 Oversikt", "📊 Analyse", "📈 Grafer", "🔮 Prediksjon", "📥 PDF-rapport", "➕ Legg til transaksjon"
         ])
+        
+        # 🔧 Utviklerknapp (kun for deg)
+        if st.checkbox("🧪 Fyll med testdata"):
+            from app import legg_inn_testdata
+            legg_inn_testdata()
+            st.success("Testdata lagt inn!")
+            st.experimental_rerun()
+
+        return valg
