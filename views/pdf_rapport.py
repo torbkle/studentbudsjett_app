@@ -1,5 +1,4 @@
 import streamlit as st
-
 from pdf_report import lag_pdf_rapport
 
 def vis(df):
@@ -11,4 +10,3 @@ def vis(df):
         st.success("PDF generert!")
     except Exception as e:
         st.error(f"Feil under PDF-generering: {e}")
-
