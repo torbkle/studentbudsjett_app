@@ -31,47 +31,53 @@ def load_data():
 df = load_data()
 df = beregn_saldo(df)
 
-# 🧭 Navigasjonsmeny
+# 🧭 Navigasjonsmeny med ikoner
 with st.sidebar:
     st.image("studentbudsjett_logo.png", width=150)
-    st.title("📋 Navigasjon")
-    valg = st.radio("Gå til seksjon:", [
-        "Oversikt", "Analyse", "Grafer", "Prediksjon", "PDF-rapport", "Legg til transaksjon"
+    st.markdown("## 📋 Navigasjon")
+    valg = st.radio("Velg seksjon:", [
+        "📄 Oversikt",
+        "📊 Analyse",
+        "📈 Grafer",
+        "🔮 Prediksjon",
+        "📥 PDF-rapport",
+        "➕ Legg til transaksjon"
     ])
 
-# 📋 Seksjon: Oversikt
-if valg == "Oversikt":
-    st.header("📋 Dine transaksjoner")
+# 📄 Oversikt
+if valg == "📄 Oversikt":
+    st.markdown("## 📄 Dine transaksjoner")
     st.dataframe(df, use_container_width=True)
 
-# 📊 Seksjon: Analyse
-elif valg == "Analyse":
-    st.header("📊 Budsjettanalyse")
+# 📊 Analyse
+elif valg == "📊 Analyse":
+    st.markdown("## 📊 Budsjettanalyse")
     inntekt, utgift = calculate_totals(df)
-    st.metric("Totale inntekter", f"{inntekt:.2f} kr")
-    st.metric("Totale utgifter", f"{utgift:.2f} kr")
+    col1, col2 = st.columns(2)
+    col1.metric("Totale inntekter", f"{inntekt:.2f} kr")
+    col2.metric("Totale utgifter", f"{utgift:.2f} kr")
     tips, level = generate_savings_tip(inntekt, utgift)
     getattr(st, level)(tips)
 
-# 📈 Seksjon: Grafer
-elif valg == "Grafer":
-    st.header("📈 Visualisering")
+# 📈 Grafer
+elif valg == "📈 Grafer":
+    st.markdown("## 📈 Visualisering")
     plot_expense_bar(df)
     plot_pie_chart(df[df["Type"] == "Utgift"].groupby("Kategori")["Beløp"].sum())
     plot_saldo(df)
 
-# 🔮 Seksjon: Prediksjon
-elif valg == "Prediksjon":
-    st.header("🔮 Prediksjon av saldo")
+# 🔮 Prediksjon
+elif valg == "🔮 Prediksjon":
+    st.markdown("## 🔮 Prediksjon av saldo")
     dato_null, trend = predict_zero_balance(df)
     if dato_null:
         st.warning(f"Saldoen vil nå 0 kr rundt {dato_null}.")
     else:
         st.success("Saldoen ser ut til å holde seg stabil eller øke.")
 
-# 📄 Seksjon: PDF-rapport
-elif valg == "PDF-rapport":
-    st.header("📄 Generer PDF-rapport")
+# 📥 PDF-rapport
+elif valg == "📥 PDF-rapport":
+    st.markdown("## 📥 Generer PDF-rapport")
     if st.button("Generer PDF"):
         df["Uke"] = df["Dato"].dt.isocalendar().week
         ukesaldo = df.groupby("Uke")["Saldo"].last()
@@ -80,9 +86,9 @@ elif valg == "PDF-rapport":
         pdf = generate_pdf(df, df["Saldo"].iloc[-1], prediksjonstekst, ukesaldo, ukekategorier)
         st.download_button("📥 Last ned PDF", data=pdf.output(dest="S").encode("latin-1"), file_name="studentbudsjett_rapport.pdf")
 
-# ➕ Seksjon: Legg til transaksjon
-elif valg == "Legg til transaksjon":
-    st.header("➕ Legg til ny transaksjon")
+# ➕ Legg til transaksjon
+elif valg == "➕ Legg til transaksjon":
+    st.markdown("## ➕ Legg til ny transaksjon")
     with st.form("ny_transaksjon"):
         dato = st.date_input("Dato", value=datetime.today())
         type_ = st.selectbox("Type", ["Inntekt", "Utgift"])
