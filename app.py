@@ -110,3 +110,4 @@ elif valg == "➕ Legg til transaksjon":
         if st.button("🔄 Oppdater visning"):
             st.experimental_rerun()
 
+
