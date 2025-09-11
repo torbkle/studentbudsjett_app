@@ -46,7 +46,26 @@ with st.sidebar:
 # 📄 Oversikt
 if valg == "📄 Oversikt":
     st.markdown("## 📄 Dine transaksjoner")
-    st.dataframe(df, use_container_width=True)
+
+    # 🔍 Filtrering
+    type_filter = st.selectbox("Filtrer etter type:", ["Alle", "Inntekt", "Utgift"])
+    kategori_filter = st.text_input("Filtrer etter kategori (valgfritt):")
+    dato_start = st.date_input("Fra dato:", value=df["Dato"].min() if not df.empty else datetime.today())
+    dato_slutt = st.date_input("Til dato:", value=df["Dato"].max() if not df.empty else datetime.today())
+
+    filtered_df = df.copy()
+
+    if type_filter != "Alle":
+        filtered_df = filtered_df[filtered_df["Type"] == type_filter]
+    
+    if kategori_filter:
+        filtered_df = filtered_df[filtered_df["Kategori"].str.contains(kategori_filter, case=False)]
+    
+    filtered_df = filtered_df[(filtered_df["Dato"] >= pd.to_datetime(dato_start)) & 
+                              (filtered_df["Dato"] <= pd.to_datetime(dato_slutt))]
+
+    st.dataframe(filtered_df, use_container_width=True)
+
 
 # 📊 Analyse
 elif valg == "📊 Analyse":
