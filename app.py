@@ -23,7 +23,7 @@ def beregn_saldo(df):
 
 # 📥 Last inn data
 @st.cache_data
-def load_data():
+#def load_data():
     try:
         df = pd.read_csv("studentbudsjett_data.csv", parse_dates=["Dato"])
         df.sort_values("Dato", inplace=True)
@@ -31,7 +31,7 @@ def load_data():
     except FileNotFoundError:
         return pd.DataFrame(columns=["Dato", "Type", "Beløp", "Kategori"])
 
-df = load_data()
+df = hent_data()
 df = beregn_saldo(df)
 
 # 🧭 Navigasjonsmeny med ikoner
