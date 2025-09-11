@@ -2,6 +2,8 @@ import streamlit as st
 from pdf_report import lag_pdf_rapport
 from components.infoboks import vis_infoboks
 from components.tabell import vis_tabell
+from components.rapport import vis_rapportoppsummering
+
 
 
 def vis(df):
@@ -15,7 +17,7 @@ def vis(df):
         prediksjon = lag_prediksjonstekst(df)
         vis_infoboks("Prediksjon", prediksjon, ikon="🔮", farge="#4682B4")
 
-        vis_tabell(df, tittel="Siste transaksjoner")
+        vis_rapportoppsummering(df)
 
         lag_pdf_rapport(df)
         with open("rapport.pdf", "rb") as f:
@@ -24,4 +26,5 @@ def vis(df):
         st.success("PDF generert!")
     except Exception as e:
         st.error(f"Feil under PDF-generering: {e}")
+
 
