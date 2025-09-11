@@ -31,3 +31,9 @@ def hent_data():
     df = pd.read_sql_query("SELECT * FROM transaksjoner ORDER BY Dato", conn, parse_dates=["Dato"])
     conn.close()
     return df
+    
+def slett_transaksjon(transaksjon_id):
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM transaksjoner WHERE id = ?", (transaksjon_id,))
+    conn.commit()
+    conn.close()
