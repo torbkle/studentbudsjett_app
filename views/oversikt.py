@@ -5,6 +5,7 @@ from datetime import datetime
 
 def vis(df):
     st.markdown("## 📄 Dine transaksjoner")
+    st.info(f"Antall transaksjoner: {len(df)}")
 
     type_filter = st.selectbox("Filtrer etter type:", ["Alle", "Inntekt", "Utgift"])
     kategori_filter = st.text_input("Filtrer etter kategori (valgfritt):")
