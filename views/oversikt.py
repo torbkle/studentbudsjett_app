@@ -2,8 +2,14 @@ import streamlit as st
 import pandas as pd
 from db_handler import slett_transaksjon
 from datetime import datetime
+from components.infoboks import vis_infoboks
 
 def vis(df):
+    saldo = df["Saldo"].iloc[-1]
+    vis_infoboks("Nåværende saldo", f"{saldo:.2f} kr", ikon="💰", farge="#2E8B57")
+
+    st.markdown("### 📋 Transaksjoner")
+    st.dataframe(df, use_container_width=True)
     st.markdown("## 📄 Dine transaksjoner")
     st.info(f"Antall transaksjoner: {len(df)}")
 
