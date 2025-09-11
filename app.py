@@ -6,6 +6,8 @@ from visualizer import plot_expense_bar, plot_saldo, plot_pie_chart
 from predictor import predict_zero_balance
 from pdf_report import generate_pdf
 from db_handler import init_db, insert_transaksjon, hent_data
+from db_handler import slett_transaksjon
+
 init_db()
 
 # 🔧 Beregn saldo
@@ -64,7 +66,19 @@ if valg == "📄 Oversikt":
     filtered_df = filtered_df[(filtered_df["Dato"] >= pd.to_datetime(dato_start)) & 
                               (filtered_df["Dato"] <= pd.to_datetime(dato_slutt))]
 
-    st.dataframe(filtered_df, use_container_width=True)
+    st.markdown("## 📄 Dine transaksjoner")
+
+for _, row in filtered_df.iterrows():
+    with st.expander(f"{row['Dato'].strftime('%Y-%m-%d')} – {row['Kategori']} – {row['Beløp']} kr"):
+        st.write(f"**Type:** {row['Type']}")
+        st.write(f"**Kategori:** {row['Kategori']}")
+        st.write(f"**Beløp:** {row['Beløp']} kr")
+        st.write(f"**Saldo etter:** {row['Saldo']} kr")
+        if st.button(f"🗑️ Slett transaksjon {row['id']}", key=f"slett_{row['id']}"):
+            slett_transaksjon(row['id'])
+            st.success("Transaksjon slettet.")
+            st.experimental_rerun()
+
 
 
 # 📊 Analyse
