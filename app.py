@@ -34,26 +34,30 @@ init_db()
 
 df = hent_data()
 df = beregn_saldo(df)
-valg, utviklermodus = sidebar()
-
+valg = sidebar()
 
 from db_handler import tøm_database
 
-if utviklermodus:
+# 🛠️ Utviklermodus og testverktøy
+if st.sidebar.checkbox("🛠️ Utviklermodus"):
     st.sidebar.markdown("## 🧪 Testverktøy")
 
     if st.sidebar.button("Fyll med testdata"):
-        legg_inn_testdata()
-        st.success("Testdata lagt inn!")
-        st.experimental_rerun()
+        try:
+            legg_inn_testdata()
+            st.success("Testdata lagt inn!")
+            st.experimental_rerun()
+        except Exception as e:
+            st.error(f"Feil under innlegging: {e}")
 
-    if st.sidebar.button("Bekreft sletting"):
+    if st.sidebar.button("Tøm databasen"):
         try:
             tøm_database()
             st.success("Databasen er tømt.")
             st.experimental_rerun()
         except Exception as e:
             st.error(f"Feil under sletting: {e}")
+
 
 
 
