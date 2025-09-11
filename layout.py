@@ -10,7 +10,7 @@ def setup():
     st.markdown("<style>footer {visibility: hidden;}</style>", unsafe_allow_html=True)
 
 def sidebar():
-    st.sidebar.image("studentbudsjett_logo.png", use_column_width=True)
+    st.sidebar.image("studentbudsjett_logo.png", use_container_width=True)
     st.sidebar.markdown("## Navigasjon")
 
     valg = st.sidebar.radio(
