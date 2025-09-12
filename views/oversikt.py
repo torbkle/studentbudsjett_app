@@ -3,9 +3,19 @@ import pandas as pd
 from db_handler import slett_transaksjon
 from datetime import datetime
 from components.infoboks import vis_infoboks
+from components.utils import vis_tom_df_melding
+
 
 def vis(df):
+    if df.empty or "Saldo" not in df.columns:
+        vis_tom_df_melding("Ingen transaksjoner registrert", "Du må legge til minst én transaksjon før oversikten kan vises.")
+        return
+
     saldo = df["Saldo"].iloc[-1]
+    vis_infoboks("Nåværende saldo", f"{saldo:.2f} kr", ikon="💰", farge="#2E8B57")
+    st.markdown("### 📋 Transaksjoner")
+    st.dataframe(df, use_container_width=True)
+
     vis_infoboks("Nåværende saldo", f"{saldo:.2f} kr", ikon="💰", farge="#2E8B57")
 
     st.markdown("### 📋 Transaksjoner")
